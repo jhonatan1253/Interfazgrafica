@@ -1,0 +1,99 @@
+import numpy as np #libreria de formas matematicas 
+from tkinter import * # * = impirtar todas las clases
+import matplotlib
+import matplotlib.pyplot as plt
+matplotlib.use("TkAgg")
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+
+
+
+def generar():
+    tiempo=np.arange(0,10,1/100)
+    a1=int(amplitud.get())
+    a2=float(frequency.get())    
+    a3=int(phase.get())
+    x=a1*np.cos((2*np.pi*a2*tiempo)+a3)
+    f=Figure(figsize=(2,2),dpi=100)
+    img=f.add_subplot(111)
+    img.plot(x,'r')
+    canvas=FigureCanvasTkAgg(f,miframe) 
+    canvas.draw() #grafico el cambas
+    canvas.get_tk_widget().pack()
+    x.set(float(amplitud.get())*np.cos((2*np.pi*float(frequency.get())*tiempo)+phase))
+    amplitud.set("")
+    frequency.set("")
+    phase.set("")
+
+def muestreado():
+    tmin=0
+    tmax=8
+    tiempo=np.linspace(tmin,tmax,400)
+    a1=int(amplitud.get())
+    a2=float(frequency.get())    
+    a3=int(phase.get())
+    
+    x1=a1*np.cos((2*np.pi*a2*tiempo)+a3)
+    F=1/(16*a2)
+    nmin=np.ceil(tmin/F)
+    nmax=np.ceil(tmax/F)
+    n=np.arange(nmin,nmax)
+    mu=a1*np.cos((2*np.pi*a2*n*F)+a3)
+    
+    f1=Figure(figsize=(2,2),dpi=100)
+    img=f1.add_subplot(111)
+    img.plot(n*F,mu,'c.')
+    canvas=FigureCanvasTkAgg(f1,miframe) 
+    canvas.draw() #grafico el cambas
+    canvas.get_tk_widget().pack()
+    x11.set(int(amplitud.get())*np.cos((2*np.pi*float(frequency.get())*n*F)+phase))
+    amplitud.set("")
+    frequency.set("")
+    phase.set("")
+    
+
+ventana=Tk()
+amplitud=StringVar()
+frequency=StringVar()
+phase=StringVar()
+x=StringVar()
+x1=StringVar()
+
+
+miframe=Frame(ventana,bg="green")
+miframe.pack()
+
+labe2=Label(miframe,text="Universidad Técnica del Norte",font=("Times New Roman",30),fg="blue",bg="linen")
+labe2.pack()
+label=Label(miframe,text="Procesamiento digital de Señales",font=("Times New Roman",20),fg="blue",bg="linen")
+label.pack()
+#Frame Amplitud
+label2=Label(miframe,text="Amplitud",font=("Arial",12),fg="gray2",bg="yellow")
+label2.pack()
+entry=Entry(miframe, textvariable=amplitud).pack()
+#Frame frecuencia
+label2=Label(miframe,text="Frecuencia",font=("Arial",12),fg="gray2",bg="yellow")
+label2.pack()
+entry=Entry(miframe, textvariable=frequency).pack()
+#Frame Fase
+label2=Label(miframe,text="Fase",font=("Arial",12),fg="gray2",bg="yellow")
+label2.pack()
+entry=Entry(miframe, textvariable=phase).pack()
+color_boton="salmon3"
+ancho_boton=8
+alto_boton=4
+#Botones 
+Button(miframe,text="Generar señales",command=generar).pack()
+
+Button(miframe,text="Muestrear señales",command=muestreado).pack()
+#Frame resultados
+label2=Label(miframe,text="Resultados",font=("Arial",12),fg="white",bg="green")
+
+
+
+ventana.title("Proyecto Procesamiento De SeñalesInterfaz Gráfica")
+ventana.geometry("900x900")
+ventana.resizable(True,True)
+ventana.configure(background="green")
+
+ventana.mainloop()
